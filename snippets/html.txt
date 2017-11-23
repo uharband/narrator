@@ -1,0 +1,8 @@
+<!--- narrator ----------->
+<div class="art_header_footer_facebook" >
+<audio controls style="width:90px;height:25px;margin-bottom:0px;margin-bottom:0px;float:right">
+  <source src="http://narattor-app-narrator2.1d35.starter-us-east-1.openshiftapps.com/recording.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+</div>
+<!--- narrator ----------->
