@@ -1,8 +1,0 @@
-/**/ jsonp1510673775467({
-   "error": {
-      "message": "(#12) fql is deprecated for versions v2.1 and higher",
-      "type": "OAuthException",
-      "code": 12,
-      "fbtrace_id": "F/bv4/eSGOh"
-   }
-});
