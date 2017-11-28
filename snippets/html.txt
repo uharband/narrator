@@ -1,7 +1,7 @@
 <!--- narrator ----------->
 <div class="art_header_footer_facebook" >
 <audio controls style="width:90px;height:25px;margin-bottom:0px;margin-bottom:0px;float:right">
-  <source src="http://http://narrator-narrator.1d35.starter-us-east-1.openshiftapps.com/audioFile" type="audio/mpeg">
+  <source src="http://narrator-narrator.1d35.starter-us-east-1.openshiftapps.com/audioFile" type="audio/mpeg">
 Your browser does not support the audio element.
 </audio>
 </div>
