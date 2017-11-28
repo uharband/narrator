@@ -7,6 +7,7 @@ var request = require('request');
 var contents = fs.readFileSync(path.join(__dirname, 'snippets', 'html.txt'), 'utf8');
 
 app.use(express.static('public'));
+app.use(express.static('data'));
 
 app.get('/', function (req, res) {
   res.send('Hello World! try my /ping api!')
@@ -30,14 +31,18 @@ app.get('/manage/health', function (req, res) {
     res.send(JSON.stringify(statusObj));
 });
 
-
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
 // upload an audio file
 app.post('/upload', function(req, res) {
     var name = req.query.name;
+    var base64Name = (new Buffer(name).toString('base64')) + '.mp4';
     if(name === undefined){
-        name = recording.mp4;
+        base64Name = recording.mp4;
     }
-    req.pipe(fs.createWriteStream(__dirname + path.sep + 'data'  + path.sep + name));
+    req.pipe(fs.createWriteStream(__dirname + path.sep + 'data'  + path.sep + base64Name));
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('OK!');
 });
@@ -50,7 +55,7 @@ app.get('/article', function(req, res){
     request(url, function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        body = body.replace("<div class='art_header_footer_facebook'>", contents + "<div class='art_header_footer_facebook'>");
+        body = body.replace("<div class='art_header_footer_facebook'>", contents.replace('audioFile', (new Buffer(url).toString('base64')) + '.mp4') + "<div class='art_header_footer_facebook'>");
         res.send(body);
     });
 
