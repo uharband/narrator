@@ -42,18 +42,38 @@ app.post('/upload', function(req, res) {
     if(name === undefined){
         base64Name = recording.mp4;
     }
-    req.pipe(fs.createWriteStream(__dirname + path.sep + 'data'  + path.sep + base64Name));
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('OK!');
+    var fileName = __dirname + path.sep + 'data'  + path.sep + base64Name;
+    console.log('uploading audio file. name is ' + name + ', base64Name is ' + base64Name);
+    req.pipe(fs.createWriteStream(fileName).on('finish', function() {
+        var fileSize = getFileSize(fileName);
+        console.log('done writing audio file. file with name ' + name + ' size is ' + fileSize);
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('OK! file size is ' + fileSize + ', base64 name is ' + base64Name);
+    }));
+
 });
 
 
 app.get('/article', function(req, res){
 
     var url = req.query.path;
+    var fileName = (new Buffer(url).toString('base64')) + '.mp4';
+    var filePath = __dirname + path.sep + 'data'  + path.sep + fileName;
 
-    request(url, function (error, response, body) {
-        console.log('error:', error); // Print the error if one occurred
+    var fileExists = fs.existsSync(filePath);
+
+    console.log('article: entered. path=' + url + ', filePath=' + filePath + ' file exists? ' + fileExists);
+
+    if(!fileExists){
+        return res.send('audio file ' + filePath + ' does not exist for path ' + url);
+    }
+
+    request(url, function (err, response, body) {
+        if(err){
+            console.log('error while trying to get data from ' + url + '. err: ' + err.toString())
+            res.send('error while trying to get data from ' + url + '. err: ' + err.toString());
+        }
+
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         body = body.replace("<div class='art_header_footer_facebook'>", contents.replace('audioFile', (new Buffer(url).toString('base64')) + '.mp4') + "<div class='art_header_footer_facebook'>");
         res.send(body);
@@ -82,3 +102,9 @@ function initiateStatus(){
     statusObj.initialReadiness.lastStatusUpdate = new Date().toISOString();
 }
 
+function getFileSize(fileName){
+    var stats = fs.statSync(fileName);
+    var fileSizeInBytes = stats.size;
+//Convert the file size to megabytes (optional)
+    return fileSizeInBytes / 1000000.0
+}
