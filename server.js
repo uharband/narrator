@@ -6,8 +6,16 @@ var request = require('request');
 
 var contents = fs.readFileSync(path.join(__dirname, 'snippets', 'html.txt'), 'utf8');
 
+var audioDirectory = __dirname + path.sep + 'data';
+if(process.env.AUDIO_DIR !== undefined){
+    audioDirectory = process.env.AUDIO_DIR;
+}
+
+console.log('after resolving env audioDirectory is ' + audioDirectory);
+
+
 app.use(express.static('public'));
-app.use(express.static('data'));
+app.use(express.static(audioDirectory));
 
 app.get('/', function (req, res) {
   res.send('Hello World! try my /ping api!')
