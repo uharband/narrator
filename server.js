@@ -50,7 +50,7 @@ app.post('/upload', function(req, res) {
     if(name === undefined){
         base64Name = recording.mp4;
     }
-    var fileName = __dirname + path.sep + 'data'  + path.sep + base64Name;
+    var fileName = audioDirectory  + path.sep + base64Name;
     console.log('uploading audio file. name is ' + name + ', base64Name is ' + base64Name);
     req.pipe(fs.createWriteStream(fileName).on('finish', function() {
         var fileSize = getFileSize(fileName);
@@ -66,7 +66,7 @@ app.get('/article', function(req, res){
 
     var url = req.query.path;
     var fileName = (new Buffer(url).toString('base64')) + '.mp4';
-    var filePath = __dirname + path.sep + 'data'  + path.sep + fileName;
+    var filePath = audioDirectory  + path.sep + fileName;
 
     var fileExists = fs.existsSync(filePath);
 
