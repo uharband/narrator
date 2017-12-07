@@ -1,8 +1,51 @@
-<!--- narrator ----------->
-<div class="art_header_footer_facebook" >
-<audio controls style="width:90px;height:25px;margin-bottom:0px;margin-bottom:0px;float:right">
-  <source src="http://narrator-narrator.1d35.starter-us-east-1.openshiftapps.com/audioFile" type="audio/mpeg">
-Your browser does not support the audio element.
+<script>
+    function playPause_clicked(){
+        var audio = document.getElementById('narratorAudio');
+        if(audio.paused){
+            audio.play();
+        }
+        else{
+            audio.pause();
+        }
+    }
+    function stop_clicked(){
+        var audio = document.getElementById('narratorAudio');
+        audio.load();
+    }
+    function on_playing(){
+        setButtonStatus('playPause', 'pause');
+    }
+    function on_audioEnded(){
+        setButtonStatus('playPause', 'play');
+    }
+    function on_pause(){
+        setButtonStatus('playPause', 'play');
+    }
+    function on_canPlay(){
+        setButtonStatus('playPause', 'play');
+    }
+
+    function setButtonStatus(button, status){
+        var button = document.getElementById(button);
+        switch(status){
+            case 'play':
+                button.src = "images/play-button.png";
+                break;
+            case 'pause':
+                button.src = "images/pause.png";
+                break;
+        }
+    }
+    function getAudioSrc(){
+    }
+
+</script>
+
+<span class="bottomsharinglinks_spriteIcon" style="width: 45px;margin-left:2px">
+<audio id="narratorAudio" onplay="on_playing()" onpause="on_pause()" onended="on_audioEnded()" oncanplay="on_canPlay()">
+  <source src="audioFile" type="audio/mpeg">
 </audio>
-</div>
-<!--- narrator ----------->
+<image id="stopPlaying" src="images/stop.png" style="width:20px;height:20px" onclick="stop_clicked()"/>
+<image id="playPause" src="images/play-button.png" style="width:20px;height:20px" onclick="playPause_clicked()"/>
+
+</span>

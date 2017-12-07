@@ -15,6 +15,7 @@ console.log('after resolving env audioDirectory is ' + audioDirectory);
 
 
 app.use(express.static('public'));
+app.use(express.static('images'));
 app.use(express.static(audioDirectory));
 
 app.get('/', function (req, res) {
@@ -61,6 +62,19 @@ app.post('/upload', function(req, res) {
 
 });
 
+// upload an audio file
+app.post('/upload-default', function(req, res) {
+
+    var fileName = audioDirectory  + path.sep + 'default.mp4';
+    console.log('uploading default audio file');
+    req.pipe(fs.createWriteStream(fileName).on('finish', function() {
+        var fileSize = getFileSize(fileName);
+        console.log('done writing default audio file size is ' + fileSize);
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('OK! file size is ' + fileSize + ', name is ' + fileName);
+    }));
+});
+
 
 app.get('/article', function(req, res){
 
@@ -73,7 +87,8 @@ app.get('/article', function(req, res){
     console.log('article: entered. path=' + url + ', filePath=' + filePath + ' file exists? ' + fileExists);
 
     if(!fileExists){
-        return res.send('audio file ' + filePath + ' does not exist for path ' + url);
+        //return res.send('audio file ' + filePath + ' does not exist for path ' + url);
+        fileName = 'default.mp4';
     }
 
     request(url, function (err, response, body) {
@@ -83,7 +98,7 @@ app.get('/article', function(req, res){
         }
 
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        body = body.replace("<div class='art_header_footer_facebook'>", contents.replace('audioFile', (new Buffer(url).toString('base64')) + '.mp4') + "<div class='art_header_footer_facebook'>");
+        body = body.replace("<div class='articlebottomsharinglinks_right_links  header_sharing'>", "<div class='articlebottomsharinglinks_right_links  header_sharing'>" + contents.replace('audioFile', fileName));
         res.send(body);
     });
 
